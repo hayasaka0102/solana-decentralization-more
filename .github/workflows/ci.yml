@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [ offload-prototype ]   # ← ローカル作業ブランチ
+  pull_request:                      # PR が開かれたとき・更新されたとき
+    branches: [ master ]             # ← フォーク内のベースブランチ
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ソース取得
+      - uses: actions/checkout@v4
+
+      # Rust ツールチェーン（stable）
+      - uses: dtolnay/rust-toolchain@stable
+
+      # 依存キャッシュ（任意だが速くなる）
+      - uses: Swatinem/rust-cache@v2
+
+      # リリースビルド
+      - name: Cargo build (release, all targets)
+        run: cargo build --release --workspace --all-targets
