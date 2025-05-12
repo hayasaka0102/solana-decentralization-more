@@ -2,27 +2,27 @@ name: CI
 
 on:
   push:
-    branches: [ offload-prototype ]   # ← ローカル作業ブランチ
-  pull_request:                      # PR が開かれたとき・更新されたとき
-    branches: [ master ]             # ← フォーク内のベースブランチ
+    branches: [ offload-prototype ]      # 作業ブランチ
+  pull_request:
+    branches: [ offload-prototype ]      # PR も同ブランチ
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # ソース取得
       - uses: actions/checkout@v4
-
-      # Rust ツールチェーン（stable）
       - uses: dtolnay/rust-toolchain@stable
 
-     # 追加: システム依存ライブラリ
+      # ★変更 1: hidapi に必要な libusb の dev パッケージも追加
       - name: Install system deps
-        run: sudo apt-get update && sudo apt-get install -y libudev-dev pkg-config
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libudev-dev libusb-1.0-0-dev pkg-config
+          # ★変更 2: 確認用ログ（任意）─ あとで削除しても OK
+          dpkg -L libudev-dev | grep libudev.pc || true
 
       - uses: Swatinem/rust-cache@v2
 
-      # リリースビルド
       - name: Cargo build (release, all targets)
         run: cargo build --release --workspace --all-targets
