@@ -14,12 +14,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
 
-      # ─── システム依存ライブラリをインストール ───
       - name: Install native deps
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y libudev-dev libusb-1.0-0-dev pkg-config
-          # *.pc が置かれるパスを後続ステップへ渡す
+          sudo apt-get install -y \
+            libudev-dev \
+            libusb-1.0-0-dev \
+            pkg-config \
+            protobuf-compiler
           echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
 
       - uses: Swatinem/rust-cache@v2
