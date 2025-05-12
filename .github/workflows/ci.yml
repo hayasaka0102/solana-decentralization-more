@@ -8,20 +8,28 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
 
-      - name: Install system deps
+      # ─── デバッグ用ステップ ───
+      - name: Install system deps (debug)
         run: |
-          sudo apt-get update
+          set -e
+          sudo apt-get update -qq
           sudo apt-get install -y libudev-dev libusb-1.0-0-dev pkg-config
-          echo "---- locate libudev.pc ----"
+
+          echo "=== Installed Packages ==="
+          dpkg -l | grep -E 'libudev-dev|libusb|pkg-config'
+
+          echo "=== Locate libudev.pc ==="
           sudo find /usr -name libudev.pc
-          # CI の後続ステップに PKG_CONFIG_PATH を伝搬
+
+          # 後続ステップに PKG_CONFIG_PATH を渡す
           echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
+      # ──────────────────────────
 
       - uses: Swatinem/rust-cache@v2
 
