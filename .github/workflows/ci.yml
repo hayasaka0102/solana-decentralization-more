@@ -14,22 +14,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
 
-      # ─── デバッグ用ステップ ───
-      - name: Install system deps (debug)
+      # ─── システム依存ライブラリをインストール ───
+      - name: Install native deps
         run: |
-          set -e
           sudo apt-get update -qq
           sudo apt-get install -y libudev-dev libusb-1.0-0-dev pkg-config
-
-          echo "=== Installed Packages ==="
-          dpkg -l | grep -E 'libudev-dev|libusb|pkg-config'
-
-          echo "=== Locate libudev.pc ==="
-          sudo find /usr -name libudev.pc
-
-          # 後続ステップに PKG_CONFIG_PATH を渡す
+          # *.pc が置かれるパスを後続ステップへ渡す
           echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
-      # ──────────────────────────
 
       - uses: Swatinem/rust-cache@v2
 
