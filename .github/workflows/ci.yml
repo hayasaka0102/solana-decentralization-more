@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ offload-prototype ]      # 作業ブランチ
+    branches: [ offload-prototype ]
   pull_request:
-    branches: [ offload-prototype ]      # PR も同ブランチ
+    branches: [ offload-prototype ]
 
 jobs:
   build:
@@ -14,15 +14,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
 
-      # ★変更 1: hidapi に必要な libusb の dev パッケージも追加
       - name: Install system deps
         run: |
           sudo apt-get update
           sudo apt-get install -y libudev-dev libusb-1.0-0-dev pkg-config
-          # ★変更 2: 確認用ログ（任意）─ あとで削除しても OK
+          # debug: confirm libudev.pc is there
           dpkg -L libudev-dev | grep libudev.pc || true
 
       - uses: Swatinem/rust-cache@v2
 
+      # ★変更: PKG_CONFIG_PATH を明示
       - name: Cargo build (release, all targets)
+        env:
+          PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig
         run: cargo build --release --workspace --all-targets
