@@ -33,6 +33,7 @@
 //! It offers a high-level API that signs transactions
 //! on behalf of the caller, and a low-level API for when they have
 //! already been signed and verified.
+use crate::offload_executor::OffloadExecutor;
 #[cfg(feature = "dev-context-only-utils")]
 use solana_accounts_db::accounts_db::{
     ACCOUNTS_DB_CONFIG_FOR_BENCHMARKS, ACCOUNTS_DB_CONFIG_FOR_TESTING,
@@ -6575,6 +6576,10 @@ impl Bank {
         tx: VersionedTransaction,
         verification_mode: TransactionVerificationMode,
     ) -> Result<SanitizedTransaction> {
+        // FullVerification のときだけオフロード初期化
+        if verification_mode == TransactionVerificationMode::FullVerification {
+            OffloadExecutor::new();
+        }
         let sanitized_tx = {
             let size =
                 bincode::serialized_size(&tx).map_err(|_| TransactionError::SanitizeFailure)?;
