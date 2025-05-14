@@ -17,11 +17,11 @@ impl OffloadExecutor {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tracing_subscriber;  // ← 追加
     #[test]
     fn test_offload_executor_traces() {
-        // trace! マクロの出力を有効化
-        tracing_subscriber::fmt().with_env_filter("trace").init();
+        // トレースレベルのログを出力させる
+         std::env::set_var("RUST_LOG", "trace");
+        tracing_subscriber::fmt::init();
         // これでコンソールに「🟢 offload executor initialized」が出る
         OffloadExecutor::new();
     }
