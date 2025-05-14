@@ -78,6 +78,7 @@ tar = { workspace = true }
 tempfile = { workspace = true }
 thiserror = { workspace = true }
 zstd = { workspace = true }
+tracing = "0.1"
 
 [lib]
 crate-type = ["lib"]

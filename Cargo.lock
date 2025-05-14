@@ -6967,6 +6967,7 @@ dependencies = [
  "tempfile",
  "test-case",
  "thiserror",
+ "tracing",
  "zstd",
 ]
 
