@@ -123,7 +123,7 @@ use {
         feature,
         feature_set::{
             self, include_loaded_accounts_data_size_in_fee_calculation,
-            remove_rounding_in_fee_calculation, FeatureSet,
+            remove_rounding_in_fee_calculation, FeatureSet, offload_signature_verification,
         },
         fee::FeeStructure,
         fee_calculator::{FeeCalculator, FeeRateGovernor},
@@ -6576,10 +6576,6 @@ impl Bank {
         tx: VersionedTransaction,
         verification_mode: TransactionVerificationMode,
     ) -> Result<SanitizedTransaction> {
-        // FullVerification のときだけオフロード初期化
-        if verification_mode == TransactionVerificationMode::FullVerification {
-            OffloadExecutor::new();
-        }
         let sanitized_tx = {
             let size =
                 bincode::serialized_size(&tx).map_err(|_| TransactionError::SanitizeFailure)?;
@@ -6588,7 +6584,24 @@ impl Bank {
             }
             let message_hash = if verification_mode == TransactionVerificationMode::FullVerification
             {
-                tx.verify_and_hash_message()?
+                // Check if offload feature is enabled
+                if self.feature_set.is_active(&offload_signature_verification::id()) {
+                    trace!(
+                        "🟢 offload_signature_verification feature enabled, using OffloadExecutor"
+                    );
+                    // For Phase-1: Initialize OffloadExecutor but still do synchronous verification
+                    // In future phases, this will be actual async verification
+                    let _executor = OffloadExecutor::new();
+                    trace!("🟢 OffloadExecutor initialized for future async verification");
+                    
+                    // Continue with synchronous verification for now
+                    tx.verify_and_hash_message()?
+                } else {
+                    trace!(
+                        "🔶 offload_signature_verification feature disabled, using synchronous verification"
+                    );
+                    tx.verify_and_hash_message()?
+                }
             } else {
                 tx.message.hash()
             };

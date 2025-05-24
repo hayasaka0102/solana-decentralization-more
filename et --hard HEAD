@@ -1,0 +1,27 @@
+[33m962a2ead74[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32moffload-prototype[m[33m, [m[1;31morigin/offload-prototype[m[33m)[m feat: phase-0 complete OffloadExecutor stub, CI setup, and Bank hook
+[33m57d23d345f[m test: add tracing-subscriber for offload_executor tests
+[33m356569b426[m test: add tracing-subscriber for offload_executor tests
+[33m10da725d13[m feat: phase-0 invoke OffloadExecutor in verify_transaction and expose module
+[33mb9b809f038[m feat: phase-0 invoke OffloadExecutor in verify_transaction
+[33m8317fbc4fb[m ci: install native deps and set PKG_CONFIG_PATH
+[33me8a0fbfc12[m ci: install native deps and set PKG_CONFIG_PATH
+[33m8ac199faa8[m ci: install native deps and set PKG_CONFIG_PATH
+[33m8eac714618[m ci: add debug steps for system deps
+[33m22051488d3[m ci: install libudev-dev for hidapi
+[33m20436d0d86[m ci: install libudev-dev for hidapi
+[33m31be84e7ce[m ci: install libudev-dev for hidapi
+[33m0ff2d9e95f[m ci: install libudev-dev for hidapi
+[33m217f4be6eb[m ci; add cargo build workflow
+[33m2819cf7164[m feat: phase-0: executor init trace
+[33me8ac23cba6[m feat: phase-0: executor init trace
+[33m1592032b1d[m docs: add offload design draft
+[33m7700cb3128[m[33m ([m[1;31mupstream/master[m[33m, [m[1;31mupstream/HEAD[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m chore: readme
+[33mde3c79828c[m chore: readme
+[33m27eff8408b[m Revert "Allow configuration of replay thread pools from CLI (#236)"
+[33m973d05c098[m Allow configuration of replay thread pools from CLI (#236)
+[33m1d89ea01cc[m Rename LoadedPrograms to ProgramCache for readability (#339)
+[33m2273098c55[m [TieredStorage] Store account address range (#172)
+[33me97d3590c7[m [TieredStorage] Refactor TieredStorage::new_readonly() code path (#195)
+[33m81c8ed73bc[m rpc-sts: add config options for stake-weighted qos (#197)
+[33m304333405c[m Revert deprecate executable feature (#309)
+[33m78f033d9e6[m Move code to check_program_modification_slot out of SVM (#329)

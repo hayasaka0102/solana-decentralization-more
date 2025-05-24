@@ -1,0 +1,111 @@
+[33m9c79ddd7d1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32moffload-prototype[m[33m)[m コンパイルエラーと警告の修正
+[33m962a2ead74[m[33m ([m[1;31morigin/offload-prototype[m[33m)[m feat: phase-0 complete OffloadExecutor stub, CI setup, and Bank hook
+[33m57d23d345f[m test: add tracing-subscriber for offload_executor tests
+[33m356569b426[m test: add tracing-subscriber for offload_executor tests
+[33m10da725d13[m feat: phase-0 invoke OffloadExecutor in verify_transaction and expose module
+[33mb9b809f038[m feat: phase-0 invoke OffloadExecutor in verify_transaction
+[33m8317fbc4fb[m ci: install native deps and set PKG_CONFIG_PATH
+[33me8a0fbfc12[m ci: install native deps and set PKG_CONFIG_PATH
+[33m8ac199faa8[m ci: install native deps and set PKG_CONFIG_PATH
+[33m8eac714618[m ci: add debug steps for system deps
+[33m22051488d3[m ci: install libudev-dev for hidapi
+[33m20436d0d86[m ci: install libudev-dev for hidapi
+[33m31be84e7ce[m ci: install libudev-dev for hidapi
+[33m0ff2d9e95f[m ci: install libudev-dev for hidapi
+[33m217f4be6eb[m ci; add cargo build workflow
+[33m2819cf7164[m feat: phase-0: executor init trace
+[33me8ac23cba6[m feat: phase-0: executor init trace
+[33m1592032b1d[m docs: add offload design draft
+[33m7700cb3128[m[33m ([m[1;31mupstream/master[m[33m, [m[1;31mupstream/HEAD[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m chore: readme
+[33mde3c79828c[m chore: readme
+[33m27eff8408b[m Revert "Allow configuration of replay thread pools from CLI (#236)"
+[33m973d05c098[m Allow configuration of replay thread pools from CLI (#236)
+[33m1d89ea01cc[m Rename LoadedPrograms to ProgramCache for readability (#339)
+[33m2273098c55[m [TieredStorage] Store account address range (#172)
+[33me97d3590c7[m [TieredStorage] Refactor TieredStorage::new_readonly() code path (#195)
+[33m81c8ed73bc[m rpc-sts: add config options for stake-weighted qos (#197)
+[33m304333405c[m Revert deprecate executable feature (#309)
+[33m78f033d9e6[m Move code to check_program_modification_slot out of SVM (#329)
+[33m5871a0e7ed[m CI: Add windows clippy job and fix clippy errors (#330)
+[33m0119437764[m qos service should also accumulate executed but errored units (#328)
+[33mdcdce7c9f1[m accounts-db: unpack_archive: unpack accounts straight into their final destination (#289)
+[33m7ad99f3b11[m vote: reuse ff to gate tvc constant update from 8 -> 16 (#322)
+[33me2c1cbfd57[m SVM: minor refactoring to improve code readability (#317)
+[33m170df8328d[m SVM integration test (#307)
+[33me39bd8d11d[m install: Fix check for windows build (#295)
+[33m01e48239be[m fix polarity for concurrent replay (#297)
+[33mf35bda5067[m add in method for building a `TpuClient` for `LocalCluster` tests (#258)
+[33m21eff36754[m cli: skip no-op program buffer writes (#277)
+[33mfee4d82a56[m [TieredStorage] Use BufWriter in TieredWritableFile (#261)
+[33m9e2768ad5a[m Net script fix for expected shred version (#280)
+[33m62c458e4de[m [TieredStorage] TieredStorageFile -> TieredReadonlyFile and TieredWritableFIle (#260)
+[33mf6c22e9796[m Make the quic server connection table use an async lock, reducing thrashing (#293)
+[33m6846756926[m [solana-install-init] Optimize error message for Windows user permission installation (#234)
+[33m928ede1d49[m add stats for write cache flushing (#233)
+[33m403225f112[m Remove public visibility of program cache from bank (#279)
+[33md3a7d99ef0[m vote: deprecate unused legacy vote tx plumbing (#274)
+[33mcdb0d15283[m fix typo (#264)
+[33m133bd7f652[m Use static memory layout for all sysvars (#249)
+[33m4550245379[m congestion_multiplier as u64 (#267)
+[33mc85844a319[m Clean up require_rent_exempt_split_destination feature (#253)
+[33m00a34d7d3a[m fix typos (#247)
+[33me80f8fa9e6[m remove raptor coding experiments (#255)
+[33m9e394bd0e5[m Wen_restart: check block full using blockstore (#250)
+[33m5d7219675b[m wen_restart: replace get_aggregate_result() with more methods (#254)
+[33m683e1071f7[m [zk-token-sdk] Implement `FromStr` for `ElGamalPubkey`, `ElGamalCiphertext`, and `AeCiphertext` (#130)
+[33m1036abf250[m Fix gossip contact trace (#241)
+[33m274382ff68[m Add in metrics for detecting Redundant Pulls (#199)
+[33m50cc77c58f[m relax stake split destination check (#162)
+[33m429a68cce1[m build(deps): bump hidapi from 2.6.0 to 2.6.1 (#237)
+[33m0d1cb92ed9[m Add `reserved_account_keys` module to sdk (#84)
+[33mde9358638b[m allow FlushStats to accumulate (#215)
+[33m219d7772b1[m rpc: disable BigTable with header (#226)
+[33m82fefb7de7[m update changelog and remove deprecated label on `gossip_service::get_client()` (#227)
+[33md3c0adf1c4[m deps: Update base64 to 0.22 (#225)
+[33m6e29c801f3[m bench-tps: allow option to not set account data size on every transaction (#209)
+[33m871421023e[m [TieredStorage] Remove the general-purposed TieredStorageWriter (#196)
+[33m2a4eb962ca[m [TieredStorage] Repurpose TieredReadableAccount to HotAccount (#218)
+[33m3cf4f1e38a[m ledger-tool: Allow compute-slot-cost to operate on dead slots (#213)
+[33m9ec8755819[m SVM: Eliminate filter_executable_program_accounts from pub interface (#214)
+[33m5ab9808a9e[m Loaded program test robustness (#59)
+[33m89e36f60f4[m build(deps): bump raptorq from 1.8.0 to 1.8.1 (#222)
+[33mf2d77f0209[m sdk: support Pubkey::to_bytes as constexpr (#220)
+[33m94da52df70[m build(deps): bump http from 0.2.11 to 0.2.12 (#85)
+[33mbe38278281[m Move default value for --rpc-pubsub-notification-threads to CLI (#158)
+[33m9a8da98577[m Fully remove `ThinClient` from `bench-tps` (#132)
+[33m574c1ad195[m Adds a new bench for accounts delta hash (#210)
+[33m55408093cd[m Make ReplayStage own the threadpool for tx replay (#190)
+[33me8b5f8f375[m Remove unused account_deps (#188)
+[33m4cddf3e5aa[m build(deps): bump proc-macro2 from 1.0.78 to 1.0.79 (#203)
+[33m6548d92bb5[m Moves a clippy attribute (#194)
+[33m1ffdca5773[m Make --wait-for-supermajority require --expected-shred-version (#192)
+[33m87a5893d84[m Removes redundant imports (#193)
+[33m814181b07b[m Rpc: add support for minimum context slot to `getBlocks(WithLimit)` endpoints (#191)
+[33m8b927561dc[m Revert "build(deps): bump cc from 1.0.83 to 1.0.89 (#40)" (#174)
+[33m88ffa74180[m ci: remove unused Github Actions (#124)
+[33md5c5f06ddb[m Remove `ThinClient` from `dos/` (#117)
+[33m096a1f4e5c[m Removes holding storages in AccountsHashVerifier for fastboot (#120)
+[33m27e51b3196[m Removes atomic-ness from AccountStorageEntry `id` and `slot` fields (#119)
+[33m799888efc8[m Add tests for `svm/transaction_processor.rs` (#186)
+[33mcfe6868f63[m Removes the storage recycler (#118)
+[33m4a80bb902e[m bump deprecated version numbers for `get_client` and `get_multi_client` (#184)
+[33m4d3546ad75[m expands weighted-shuffle benchmarks (#179)
+[33m365922d814[m Move AccountsDb replication arguments to deprecated list (#157)
+[33m4e63141e38[m Version bump v2.0.0 (#121)
+[33mad42bebe57[m remove dead code (#176)
+[33mf5e13a1c9f[m deprecate `get_client` and `get_multi_client` (#177)
+[33m5611a73b0e[m Moves accounts benches into accounts-db crate (#164)
+[33m11f44777e3[m Remove agave references accidentially added by f944227dba
+[33mf219fbc8f0[m Update maximum credits awarded per vote from 8 to 16 (#127)
+[33me0203f22dc[m Revert "ci: rename script (#125)"
+[33ma8e2540a57[m Revert "Use agave prefix in scripts for pre-installed binaries (#155)"
+[33m85ccadf35b[m SVM: Add doc comments, restrict visibility of some xfaces to crate (#136)
+[33m1fcef51714[m Make ReplayStage create the parallel fork replay threadpool (#137)
+[33mf8c5e15020[m Move delta hash test function to dev-context-utils (#151)
+[33m3cba072274[m Use agave prefix in scripts for pre-installed binaries (#155)
+[33md5ffeefb3d[m build(deps): bump cc from 1.0.83 to 1.0.89 (#40)
+[33m2c55819e7b[m Gather recording booleans in a data structure (#134)
+[33mce10dc1043[m runtime: Move `From<AddressLookupError>` from sdk (#141)
+[33med57e6aa10[m ci: rename script (#125)
+[33mca41b16e47[m add precompile signature metrics to cost tracker (#133)
+[33m9decf2a320[m block
