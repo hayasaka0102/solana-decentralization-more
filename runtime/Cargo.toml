@@ -43,6 +43,7 @@ qualifier_attr = { workspace = true }
 rand = { workspace = true }
 rayon = { workspace = true }
 regex = { workspace = true }
+reqwest = { workspace = true, features = ["json"] }
 serde = { workspace = true, features = ["rc"] }
 serde_derive = { workspace = true }
 serde_json = { workspace = true }
@@ -97,6 +98,7 @@ solana-runtime = { path = ".", features = ["dev-context-only-utils"] }
 solana-sdk = { workspace = true, features = ["dev-context-only-utils"] }
 static_assertions = { workspace = true }
 test-case = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt"] }
 tracing-subscriber = "0.3"
 
 [package.metadata.docs.rs]

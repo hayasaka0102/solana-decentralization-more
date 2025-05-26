@@ -552,6 +552,7 @@ impl PartialEq for Bank {
             epoch_reward_status: _,
             transaction_processor: _,
             check_program_modification_slot: _,
+            offload_executor: _,
             // Ignore new fields explicitly if they do not impact PartialEq.
             // Adding ".." will remove compile-time checks that if a new field
             // is added to the struct, this PartialEq is accordingly updated.
@@ -814,6 +815,9 @@ pub struct Bank {
     transaction_processor: TransactionBatchProcessor<BankForks>,
 
     check_program_modification_slot: bool,
+
+    /// Offload executor for smartphone signature verification
+    pub offload_executor: Option<OffloadExecutor>,
 }
 
 struct VoteWithStakeDelegations {
@@ -1001,6 +1005,7 @@ impl Bank {
             epoch_reward_status: EpochRewardStatus::default(),
             transaction_processor: TransactionBatchProcessor::default(),
             check_program_modification_slot: false,
+            offload_executor: None, // Default banks start without smartphone verification
         };
 
         bank.transaction_processor = TransactionBatchProcessor::new(
@@ -1320,6 +1325,7 @@ impl Bank {
             epoch_reward_status: parent.epoch_reward_status.clone(),
             transaction_processor: TransactionBatchProcessor::default(),
             check_program_modification_slot: false,
+            offload_executor: parent.offload_executor.clone(),
         };
 
         new.transaction_processor = TransactionBatchProcessor::new(
@@ -1867,6 +1873,7 @@ impl Bank {
             epoch_reward_status: fields.epoch_reward_status,
             transaction_processor: TransactionBatchProcessor::default(),
             check_program_modification_slot: false,
+            offload_executor: None, // Initialized as None for deserialized banks
         };
 
         bank.transaction_processor = TransactionBatchProcessor::new(
@@ -6576,19 +6583,38 @@ impl Bank {
         tx: VersionedTransaction,
         verification_mode: TransactionVerificationMode,
     ) -> Result<SanitizedTransaction> {
-        // FullVerification のときだけオフロード初期化
-        if verification_mode == TransactionVerificationMode::FullVerification {
-            OffloadExecutor::new();
-        }
         let sanitized_tx = {
             let size =
                 bincode::serialized_size(&tx).map_err(|_| TransactionError::SanitizeFailure)?;
             if size > PACKET_DATA_SIZE as u64 {
                 return Err(TransactionError::SanitizeFailure);
             }
+            
             let message_hash = if verification_mode == TransactionVerificationMode::FullVerification
             {
-                tx.verify_and_hash_message()?
+                // 🔄 Try smartphone verification first, fallback to CPU verification
+                if let Some(ref offload_executor) = self.offload_executor {
+                    // Check global feature flag before using smartphone verification
+                    if crate::offload_executor::is_smartphone_verification_feature_enabled() {
+                        match offload_executor.verify_transaction_with_smartphone(&tx) {
+                            Ok(hash) => {
+                                trace!("📱 Smartphone verification successful for transaction");
+                                hash
+                            }
+                            Err(e) => {
+                                trace!("📱 Smartphone verification failed, falling back to CPU: {:?}", e);
+                                tx.verify_and_hash_message()?
+                            }
+                        }
+                    } else {
+                        // Feature disabled, use CPU verification
+                        trace!("🔧 Smartphone verification feature disabled, using CPU verification");
+                        tx.verify_and_hash_message()?
+                    }
+                } else {
+                    // No smartphone verifier available, use CPU verification
+                    tx.verify_and_hash_message()?
+                }
             } else {
                 tx.message.hash()
             };
@@ -7595,6 +7621,27 @@ impl TransactionProcessingCallback for Bank {
         } else {
             LoadedProgramMatchCriteria::NoCriteria
         }
+    }
+}
+
+/// Smartphone verification management methods for Bank
+impl Bank {
+    /// Enable smartphone verification for transaction processing
+    pub fn enable_smartphone_verification(&mut self, smartphone_endpoint: String) {
+        self.offload_executor = Some(OffloadExecutor::with_smartphone_verifier(smartphone_endpoint));
+        trace!("📱 Smartphone verification enabled for bank at slot {}", self.slot());
+    }
+
+    /// Disable smartphone verification, falling back to CPU-only verification
+    pub fn disable_smartphone_verification(&mut self) {
+        self.offload_executor = None;
+        trace!("🔄 Smartphone verification disabled for bank at slot {}", self.slot());
+    }
+
+    /// Check if smartphone verification is currently enabled
+    pub fn has_smartphone_verification(&self) -> bool {
+        self.offload_executor.is_some() && 
+        self.offload_executor.as_ref().unwrap().has_smartphone_verifier()
     }
 }
 

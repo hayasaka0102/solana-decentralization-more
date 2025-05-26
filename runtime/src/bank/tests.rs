@@ -13792,3 +13792,127 @@ fn test_failed_simulation_compute_units() {
     let simulation = bank.simulate_transaction(&sanitized, false);
     assert_eq!(expected_consumed_units, simulation.units_consumed);
 }
+
+// Smartphone verification integration tests
+#[test]
+fn test_smartphone_verification_enable_disable() {
+    use crate::offload_executor::OffloadExecutor;
+    
+    let (genesis_config, mint_keypair) = create_genesis_config(500);
+    let mut bank = Bank::new_for_tests(&genesis_config);
+    
+    // Initially, smartphone verification should be disabled
+    assert!(!bank.has_smartphone_verification());
+    
+    // Enable smartphone verification
+    bank.enable_smartphone_verification("http://localhost:8080".to_string());
+    assert!(bank.has_smartphone_verification());
+    
+    // Disable smartphone verification
+    bank.disable_smartphone_verification();
+    assert!(!bank.has_smartphone_verification());
+}
+
+#[test]
+fn test_smartphone_verification_inheritance() {
+    let (genesis_config, mint_keypair) = create_genesis_config(500);
+    let mut parent_bank = Bank::new_for_tests(&genesis_config);
+    
+    // Enable smartphone verification on parent
+    parent_bank.enable_smartphone_verification("http://localhost:8080".to_string());
+    assert!(parent_bank.has_smartphone_verification());
+    
+    // Create child bank - should inherit smartphone verification
+    let child_bank = Bank::new_from_parent(Arc::new(parent_bank), &Pubkey::default(), 1);
+    assert!(child_bank.has_smartphone_verification());
+}
+
+#[test]
+fn test_transaction_verification_with_smartphone() {
+    let (genesis_config, mint_keypair) = create_genesis_config(10_000);
+    let mut bank = Bank::new_for_tests(&genesis_config);
+    
+    // Enable smartphone verification
+    bank.enable_smartphone_verification("http://localhost:8080".to_string());
+    
+    // Create a test transaction
+    let keypair = Keypair::new();
+    let transaction = system_transaction::transfer(
+        &mint_keypair,
+        &keypair.pubkey(),
+        100,
+        genesis_config.hash(),
+    );
+    let versioned_tx = VersionedTransaction::from(transaction);
+    
+    // Verify transaction should work with smartphone verification
+    let result = bank.verify_transaction(
+        versioned_tx,
+        TransactionVerificationMode::FullVerification,
+    );
+    
+    assert!(result.is_ok(), "Smartphone verification should succeed");
+}
+
+#[test] 
+fn test_transaction_verification_fallback_to_cpu() {
+    let (genesis_config, mint_keypair) = create_genesis_config(10_000);
+    let bank = Bank::new_for_tests(&genesis_config);
+    
+    // No smartphone verification enabled - should use CPU verification
+    assert!(!bank.has_smartphone_verification());
+    
+    // Create a test transaction
+    let keypair = Keypair::new();
+    let transaction = system_transaction::transfer(
+        &mint_keypair,
+        &keypair.pubkey(),
+        100,
+        genesis_config.hash(),
+    );
+    let versioned_tx = VersionedTransaction::from(transaction);
+    
+    // Verify transaction should work with CPU verification
+    let result = bank.verify_transaction(
+        versioned_tx,
+        TransactionVerificationMode::FullVerification,
+    );
+    
+    assert!(result.is_ok(), "CPU verification should succeed as fallback");
+}
+
+#[test]
+fn test_smartphone_verification_with_invalid_transaction() {
+    let (genesis_config, mint_keypair) = create_genesis_config(10_000);
+    let mut bank = Bank::new_for_tests(&genesis_config);
+    
+    // Enable smartphone verification
+    bank.enable_smartphone_verification("http://localhost:8080".to_string());
+    
+    // Create an invalid transaction (empty signatures)
+    use solana_sdk::{
+        message::{Message, VersionedMessage},
+        transaction::VersionedTransaction,
+        system_instruction,
+    };
+    
+    let from_pubkey = mint_keypair.pubkey();
+    let to_pubkey = Keypair::new().pubkey();
+    let instruction = system_instruction::transfer(&from_pubkey, &to_pubkey, 100);
+    let message = Message::new(&[instruction], Some(&from_pubkey));
+    let versioned_message = VersionedMessage::Legacy(message);
+    
+    // Create transaction with no signatures (invalid)
+    let versioned_tx = VersionedTransaction {
+        signatures: vec![], // Empty signatures - invalid
+        message: versioned_message,
+    };
+    
+    // Verification should fail
+    let result = bank.verify_transaction(
+        versioned_tx,
+        TransactionVerificationMode::FullVerification,
+    );
+    
+    assert!(result.is_err(), "Verification should fail for invalid transaction");
+}
